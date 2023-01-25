@@ -1,0 +1,71 @@
+﻿@model IEnumerable<MyApp.Models.Rental>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h2>Rentals</h2>
+<p style="padding-bottom:15px;">@Html.ActionLink("New Rental", "New", "rentals", null, new { @class = "btn btn-primary" })</p>
+
+@if (!Model.Any())
+{
+    <p>We don't have any Movies yet.</p>
+}
+else
+{
+
+    <table id="rental" class="table table-bordered table-hover text-center" style="margin-top:40px;">
+        <thead>
+            <tr>
+                <th class="text-center">Rental ID</th>
+                <th class="text-center">Customer ID</th>
+                <th class="text-center">Movies ID</th>
+
+                <th class="text-center">Action</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var rental in Model)
+            {
+            <tr>
+                <td>@rental.Id</td>
+                <td>@rental.CustomerID</td>
+                <td>@rental.MovieID</td>
+
+
+                <td>
+                    <a class="btn btn-link" data-toggle="tooltip" data-placement="top" data-original-title="Edit" href="@Url.Action("New", "reantals", new { id = rental.Id })">Edit</a>
+                    <button data-rental-id=@rental.Id class="btn-link js-delete">Delete</button>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+
+    @section scripts
+{
+        <script>
+            $(document).ready(function () {
+
+                $("#rental").DataTable();
+                $("#rental ").on("click", ".js-delete", function () {
+                    var button = $(this);
+                    bootbox.confirm("Are you sure you to want this Rental?", function (result) {
+                        if (result) {
+                            $.ajax({
+                                url: "/rentals/delete" + button.attr("data-rental-id"),
+                                method: "Delete",
+                                success: function () {
+                                    button.parent("tr").remove();
+                                     window.location.href = '@Url.Action("Index", "rentals")';
+                                }
+                            });
+                        }
+                    });
+                });
+            });
+        </script>
+    }

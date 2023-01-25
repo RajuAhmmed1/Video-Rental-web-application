@@ -1,0 +1,50 @@
+﻿@model MyApp.ViewModel.MovieForm
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>New Movie</h2>
+<hr />
+
+@using (Html.BeginForm("Create", "Movies"))
+{
+    @Html.ValidationSummary(true,"Please fix the following errors.", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(m => m.movies.Name)
+        @Html.TextBoxFor(m => m.movies.Name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.movies.Name, "", new { @class = "text-danger" })
+    </div>
+    
+    <div class="form-group">
+        @Html.LabelFor(m => m.movies.ReleaseDate)
+        @Html.TextBoxFor(m => m.movies.ReleaseDate, new { @class = "form-control datepicker" })
+        @Html.ValidationMessageFor(m=>m.movies.ReleaseDate, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.movies.GenreId)
+
+        @Html.DropDownListFor(m => m.movies.GenreId, new SelectList(Model.genres, "Id", "Name"), "Select Genre", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.movies.GenreId, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.movies.NumberInStock)
+        @Html.TextBoxFor(m => m.movies.NumberInStock, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m=>m.movies.NumberInStock, "", new { @class = "text-danger" })
+    </div>
+    @Html.HiddenFor(m => m.movies.Id)
+    <button type="submit" class="btn btn-primary">Submit</button>
+}
+
+    <link href="~/Content/themes/base/datepicker.css" rel="stylesheet" />
+@section Scripts {
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script>
+        $(function () {
+
+            $(".datepicker").datepicker();
+
+        });
+    </script>
+    }

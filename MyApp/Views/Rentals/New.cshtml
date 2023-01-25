@@ -1,0 +1,89 @@
+﻿@model MyApp.Models.Rental
+
+
+
+<h2>New Rental Form</h2>
+
+@section Scripts {
+
+    <script type="text/javascript">
+
+        $('.MovieID').on('change', function () {
+            var id = $('#MovieID').val();
+            $('#' + id + '').remove();
+
+            $('#tags_1_tags').append('<span class="custom_tags label label-primary" id="' + id + '"><span><input type="text" name="movie" class="form-control" value="' + id + '" data-tagsinput-init="true" style="display: none;">' + id + '&nbsp;&nbsp;</span><a href="#" style="color:#fff" onclick="tagsRemove(' + id + ')" title="Removing tag">x</a></span>');
+        });
+
+    </script>
+    <script type="text/javascript">
+
+        function tagsRemove(Id) {
+            document.getElementById(Id).remove();
+        }
+
+
+    </script>
+}
+
+
+@using (Html.BeginForm("New", "rentals"))
+{
+    <div class="row" style="padding-top:40px;">
+
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.CustomerID, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                <div class="col-md-8 col-sm-8 col-xs-12">
+                    <select name="Rental.CustomerID" id="classId" class=" js-example-basic-single  form-control">
+                        <option value="">Select Customer</option>
+                        @foreach (var item in ViewBag.customer)
+                        {
+                            <option value="@item.Name">@item.Name</option>
+                        }
+
+                    </select>
+                    @Html.ValidationMessageFor(m => m.CustomerID)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="padding:30px 0">
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.MovieID, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                <div class="col-md-8 col-sm-8 col-xs-12">
+                    <select name="Rental.MovieID" class=" js-example-basic-single  form-control MovieID" id="MovieID">
+
+                        <option value="">Select Movies</option>
+                        @foreach (var item in ViewBag.movie)
+                        {
+                            <option value="@item.Name">@item.Name</option>
+                        }
+
+                    </select>
+                    @Html.ValidationMessageFor(m => m.MovieID)
+                </div>
+            </div>
+        </div>
+    </div>
+
+ 
+
+    <div class="row" style="padding-bottom:30px;">
+        <div class="col-md-6">
+            <div class="form-group">
+
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Movie List</label>
+                <div class="col-md-9 col-sm-9 col-xs-12" style="padding-left:60px;">
+                    <div id="tags_1_tags" class="tagsinput row-border" style="width: 280px; min-height: 50px; height: 50px; border:1px solid gray;border-radius:3px;padding:5px;">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary" style="margin-left:200px;">Submit</button>
+}

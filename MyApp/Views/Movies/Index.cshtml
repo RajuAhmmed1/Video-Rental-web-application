@@ -1,0 +1,66 @@
+﻿@model IEnumerable<MyApp.Models.Movies>
+@{
+    ViewBag.Title = "Movies";
+}
+<h2>Movies</h2>
+<p style="padding-bottom:15px;">@Html.ActionLink("New Movie", "New", "Movies", null, new { @class = "btn btn-primary" })</p>
+
+
+@if (!Model.Any())
+{
+    <p>We don't have any Movies yet.</p>
+}
+else
+{
+    <table id="movies" class="table table-bordered table-hover text-center" style="margin-top:40px;">
+        <thead>
+            <tr>
+                <th class="text-center">Movies</th>
+                <th class="text-center">Genre</th>
+                <th class="text-center">Relase Date</th>
+                <th class="text-center">Number In Stock</th>
+                <th class="text-center">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var movie in Model)
+            {
+                <tr>
+                    <td>@movie.Name</td>
+                    <td>@movie.Genre.Name</td>
+                    <td>@movie.ReleaseDate</td>
+                    <td>@movie.NumberInStock</td>
+                    <td>
+                        <a class="btn btn-link" data-toggle="tooltip" data-placement="top" data-original-title="Edit" href="@Url.Action("Edit", "movies", new { id = movie.Id })">Edit</a>
+                        <button data-movie-id=@movie.Id class="btn-link js-delete">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            $("#movies").DataTable();
+            $("#movies ").on("click",".js-delete", function () {
+                var button = $(this);
+                bootbox.confirm("Are you sure you to want this movie?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/movies/" + button.attr("data-movie-id"),
+                            method: "Delete",
+                            success: function () {
+                                button.parent("tr").remove();
+                                window.location.href = '@Url.Action("Index", "Movies")';
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}
